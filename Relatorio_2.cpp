@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 void inverse_sub(double (*matrix)[][3], double (*vector_b)[3], int n);
