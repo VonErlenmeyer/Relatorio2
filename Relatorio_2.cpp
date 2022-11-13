@@ -44,7 +44,7 @@ for(int i=0; i<=20; i++){
     vector_b3[0]={0};
     vector_b3[1]=-10+i;
     vector_b3[2]=-15+i;
-    double matrix3[3][3]={{1,-1,-1},{0,0,-1},{-2,0,-1}};
+    double matrix3[3][3]={{1,-1,-1},{0,2,-1},{-2,0,-1}};
     gauss(&matrix3, &vector_b3, n, comPivot, File, VCount);
     VCount++;
 }
