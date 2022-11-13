@@ -20,18 +20,18 @@ matrix[2][0]= -2;
 cout << "1. Inversa, R3=2" << endl;
 inverseSub(&matrix, &vector_b, n);
 
-cout << "Gauss R3=2" << endl;
+cout << "1. Gauss R3=2" << endl;
 gauss(&matrix, &vector_b, n, comPivot);
 
 double matrix1[3][3]={{1,-1,-1},{0,0,-1},{-2,0,-1}};
 double vector_b1[3]={0,-2,-7};
-cout << "Gauss R2=0 e R3=2" << endl;
+cout << "1. Gauss R2=0 e R3=2" << endl;
 gauss(&matrix1, &vector_b1, n, comPivot);
 
 double matrix2[3][3]={{1,-1,-1},{0,0,-1},{-2,0,-1}};
 double vector_b2[3]={0,-2,-7};
 comPivot = true;
-cout << "Gauss R2=0 e R3=2 e Pivot" << endl;
+cout << "1. Gauss R2=0 e R3=2 e Pivot" << endl;
 gauss(&matrix2, &vector_b2, n, comPivot);
 
 return 0;
@@ -55,8 +55,9 @@ for(i=n-1; i>=0; i--){
 }
 
 for(i=0; i<3; i++){
-    cout << vector_x[i] << endl;
+    cout << "x" << i << "=" << vector_x[i] << endl;
 }
+puts("");
 }
 
 
@@ -106,5 +107,4 @@ if(k != max){
     (*vector_b)[k] = (*vector_b)[max];
     (*vector_b)[max] = temp;
 }
-
 }
