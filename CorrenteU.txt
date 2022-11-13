@@ -1,0 +1,7 @@
+plot 'I1.dat' title "Corrente I1" with lp linecolor "red" pointtype 7,  'I2.dat' title "Corrente I2" with lp linecolor "blue" pointtype 7, 'I3.dat' title "Corrente I3" with lp linecolor "green" pointtype 7
+set xlabel "Tensão em V2" font "Times-New-Roman, 16"
+set ylabel "Corrente Elétrica" offset 0.5,0 font "Times-New-Roman, 16" 
+set title "Corrente em cada resistência em função de V2" font "Times-New-Roman, 17"
+set key top right
+set zeroaxis linetype 3 lc rgb "black"
+replot
