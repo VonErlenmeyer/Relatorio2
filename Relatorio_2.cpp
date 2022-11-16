@@ -37,6 +37,18 @@ comPivot = true;
 cout << "1. Gauss R2=0 e R3=2 e Pivot" << endl;
 gauss(&matrix2, &vector_b2, n, comPivot, File, VCount);
 
+fstream I1;                   //Quando o codigo eh executado + que uma vez
+I1.open("I1.dat", ios::out);  //Ha necessidade de apagar ficheiros antigos
+if(I1){
+   I1 << "";
+   I1.close();
+   I1.open("I2.dat", ios::out);
+   I1 << "";
+   I1.close();
+   I1.open("I3.dat", ios::out);
+   I1 << "";
+   I1.close();
+}
 
 double vector_b3[3]={0,-10,-15};
 for(int i=0; i<=20; i++){
@@ -81,7 +93,7 @@ for(i=n-1; i>=0; i--){
 }
 
 
-if(File == 1){
+if(File == true){
     I1FunctionU << VCount << "\t" << vector_x[0] << endl;
     I2FunctionU << VCount << "\t" << vector_x[1] << endl;
     I3FunctionU << VCount << "\t" << vector_x[2] << endl;
