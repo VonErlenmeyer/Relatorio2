@@ -6,6 +6,8 @@ using namespace std;
 void inverseSub(double (*matrix)[][3], double (*vector_b)[3], int n, bool File, int VCount);
 void gauss(double (*matrix)[][3], double (*vector_b)[3], int n, bool Pivot, bool File, int VCount);
 void escolhaPivot(double (*matrix)[][3], double (*vector_b)[3], int n, int k);
+void gaussSeidelNoRelax(double a[5][5], double b[], int n, float precisao, int k_max, double x[] );
+void gaussSeidelRelax (double a[5][5], double b[], int n, float precisao, int k_max, double x[], float lambda, std::ofstream &ficheiro );
 void function(double (*f)[], double x[]);
 void jacobian(double (*jacob)[][3], double x[]);
 void newton(double (&x)[], int n);
@@ -19,33 +21,33 @@ bool File = false;
 int VCount = -10; //Para o grafico de I funcao de V
 int n=3;
 
-cout << "Exercício 1" << endl;
-cout << "1. Inversa, R3=0" << endl;
+cout << "Exercicio 1" << endl;
+cout << "\n1. Inversa, R3=0" << endl;
 inverseSub(&matrix, &vector_b, n, File, VCount);
 
 matrix[2][0]= -2;
-cout << "1. Inversa, R3=2" << endl;
+cout << "\n1. Inversa, R3=2" << endl;
 inverseSub(&matrix, &vector_b, n, File, VCount);
 
 matrix[2][0]=0;
-cout << "1. Gauss, R3=0" << endl;
+cout << "\n1. Gauss, R3=0" << endl;
 gauss(&matrix, &vector_b, n, comPivot, File, VCount);
 
 
 double matrix0[3][3]={{1,-1,-1},{0,2,-1},{-2,0,-1}};
 double vector_b0[3]={0,-2,-7};
-cout << "1. Gauss R3=2" << endl;
+cout << "\n1. Gauss R3=2" << endl;
 gauss(&matrix0, &vector_b0, n, comPivot, File, VCount);
 
 double matrix1[3][3]={{1,-1,-1},{0,0,-1},{-2,0,-1}};
 double vector_b1[3]={0,-2,-7};
-cout << "1. Gauss R2=0 e R3=2" << endl;
+cout << "\n1. Gauss R2=0 e R3=2" << endl;
 gauss(&matrix1, &vector_b1, n, comPivot, File, VCount);
 
 double matrix2[3][3]={{1,-1,-1},{0,0,-1},{-2,0,-1}};
 double vector_b2[3]={0,-2,-7};
 comPivot = true;
-cout << "1. Gauss R2=0 e R3=2 e Pivot" << endl;
+cout << "\n1. Gauss R2=0 e R3=2 e Pivot" << endl;
 gauss(&matrix2, &vector_b2, n, comPivot, File, VCount);
 
 fstream I1;                   //Quando o codigo eh executado + que uma vez
@@ -72,9 +74,35 @@ for(int i=0; i<=20; i++){
     VCount++;
 }
 
+double x[5]={0};
+double a[5][5]={{-5,3,0,0,0},{3,-6,3,0,0},{0,3,-6,3,0},{0,0,3,-6,3},{0,0,0,3,-5}};
+double b[5]={-80,0,0,60,0};
+
+n=5;
+cout << "\n2. Seidel sem Relax" << endl;
+gaussSeidelNoRelax(a,b,n,1e-4,200,x);
+
+
+ofstream Erro1;
+ofstream Erro2;
+ofstream Erro3;
+ofstream Erro4;
+
+Erro1.open("Erro1.dat", ios::out);
+Erro2.open("Erro2.dat", ios::out);
+Erro3.open("Erro3.dat", ios::out);
+Erro4.open("Erro4.dat", ios::out);
+
+cout << "\n2. Seidel com Relax" << endl;
+gaussSeidelRelax (a,b,5,1e-4,200,x,0.5, Erro1);
+gaussSeidelRelax (a,b,5,1e-4,200,x,1, Erro2);
+gaussSeidelRelax (a,b,5,1e-4,200,x,1.2, Erro3);
+gaussSeidelRelax (a,b,5,1e-4,200,x,2, Erro4);
+
+
 double vetorX[2]={1,1};
 n=2;
-cout << "3. Sistema de Newton" << endl;
+cout << "\n3. Sistema de Newton" << endl;
 newton(vetorX, n);
 
 return 0;
@@ -170,6 +198,94 @@ if(k != max){
 }
 }
 
+void gaussSeidelNoRelax (double a[5][5], double b[], int n, float precisao, int k_max, double x[] ){
+
+int i, j;
+int k=0;
+double soma_antes, soma_depois;
+float erro_max=100;
+float x_anterior[5] = {};
+
+while ( fabs(erro_max)>precisao && k<k_max){
+
+    erro_max=0;
+    for(i=0; i<n; i++){
+    soma_antes=0;
+    soma_depois=0;
+        for(j=0; j<i; j++){
+        soma_antes += a[i][j]*x[j];
+        }
+        for(j=i+1; j<n; j++){
+        soma_depois += a[i][j]*x[j];
+        }
+        
+        x[i]=(b[i]-soma_antes-soma_depois)/a[i][i];
+        float erro = (x[i]-x_anterior[i])/x[i];
+
+            if (erro > erro_max){
+
+                erro_max = erro;}
+
+}
+k++;
+}
+
+for(i=0; i<n; i++){
+    cout << "x" << i+1 << " = " << x[i] << endl;
+}
+
+
+}
+
+void gaussSeidelRelax (double a[5][5], double b[5], int n, float precisao, int k_max, double x[], float lambda, std::ofstream &ficheiro ){
+
+int i, j;
+int k=0;
+double soma_antes, soma_depois;
+float erro_max=100;
+float x_anterior[5] = {0,0,0,0,0};
+double array[200]={};
+float erro; 
+
+for (i=0;i<n; i++)
+{
+	x[i] = 0;
+}
+
+
+while ( fabs(erro_max)>precisao && k<k_max){
+
+    erro_max=0;
+    for(i=0; i<n; i++){
+    soma_antes=0;
+    soma_depois=0;
+        for(j=0; j<i; j++){
+        soma_antes += a[i][j]*x[j];
+        }
+        for(j=i+1; j<n; j++){
+        soma_depois += a[i][j]*x[j];
+        }
+        
+        x_anterior[i]=x[i];
+        x[i]=lambda*(b[i]-soma_antes-soma_depois)/a[i][i] + (1-lambda)*x[i];
+        erro = fabs((x[i]-x_anterior[i])/x[i]);
+
+    
+            if (erro > erro_max){
+
+                erro_max = erro;}
+		
+
+}
+ficheiro << k << "\t" << erro_max << endl;
+k++;
+}
+
+
+cout << "erro_max " << erro_max << endl;
+cout << "lambda = " << lambda << "\t num_iter = " << k << "\n" << endl;
+}
+
 void newton(double (&x)[], int n){
 
 double jacob[3][3]={0};
@@ -190,7 +306,7 @@ for(k=0; fabs(erro_max)>0.0001 && k<200; k++){
         erro_max = f[1]/x[1];
 }
 
-cout << x[0] << "\t" << x[1] << endl;
+cout << "x = " <<x[0] << "\ty = " << x[1] << endl;
 }
 
 void jacobian(double (*jacob)[][3], double x[]){
