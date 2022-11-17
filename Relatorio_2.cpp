@@ -6,16 +6,20 @@ using namespace std;
 void inverseSub(double (*matrix)[][3], double (*vector_b)[3], int n, bool File, int VCount);
 void gauss(double (*matrix)[][3], double (*vector_b)[3], int n, bool Pivot, bool File, int VCount);
 void escolhaPivot(double (*matrix)[][3], double (*vector_b)[3], int n, int k);
+void function(double (*f)[], double x[]);
+void jacobian(double (*jacob)[][3], double x[]);
+void newton(double (&x)[], int n);
 
 int main(void){
 
 double matrix[3][3]={{1,-1,-1},{0,2,-1},{0,0,-1}};
 double vector_b[3]={0,-2,-7};
-bool comPivot = false;
+bool comPivot = false; 
 bool File = false;
-int VCount = -10;
+int VCount = -10; //Para o grafico de I funcao de V
 int n=3;
 
+cout << "Exercício 1" << endl;
 cout << "1. Inversa, R3=0" << endl;
 inverseSub(&matrix, &vector_b, n, File, VCount);
 
@@ -23,8 +27,15 @@ matrix[2][0]= -2;
 cout << "1. Inversa, R3=2" << endl;
 inverseSub(&matrix, &vector_b, n, File, VCount);
 
-cout << "1. Gauss R3=2" << endl;
+matrix[2][0]=0;
+cout << "1. Gauss, R3=0" << endl;
 gauss(&matrix, &vector_b, n, comPivot, File, VCount);
+
+
+double matrix0[3][3]={{1,-1,-1},{0,2,-1},{-2,0,-1}};
+double vector_b0[3]={0,-2,-7};
+cout << "1. Gauss R3=2" << endl;
+gauss(&matrix0, &vector_b0, n, comPivot, File, VCount);
 
 double matrix1[3][3]={{1,-1,-1},{0,0,-1},{-2,0,-1}};
 double vector_b1[3]={0,-2,-7};
@@ -61,8 +72,10 @@ for(int i=0; i<=20; i++){
     VCount++;
 }
 
-
-
+double vetorX[2]={1,1};
+n=2;
+cout << "3. Sistema de Newton" << endl;
+newton(vetorX, n);
 
 return 0;
 }
@@ -98,16 +111,18 @@ if(File == true){
     I2FunctionU << VCount << "\t" << vector_x[1] << endl;
     I3FunctionU << VCount << "\t" << vector_x[2] << endl;
 }
-    else{
+    else if (VCount != 100){
     cout << vector_x[0] << endl;
     cout << vector_x[1] << endl;
     cout << vector_x[2] << endl;
     }
 
-
+if(VCount == 100){              //Para evitar boilerplate, em Newton, usa-se o vetor f[]  
+(*vector_b)[0]=vector_x[0];     //Para armazenar os valores de x
+(*vector_b)[1]=vector_x[1];
 }
 
-
+}
 
 void gauss(double (*matrix)[][3], double (*vector_b)[3], int n, bool Pivot, bool File, int VCount){
 
@@ -143,7 +158,6 @@ for(i=k; i<n; i++){
     }
 }
 
-
 if(k != max){
     for(i=k; i<n; i++){
         temp = (*matrix)[k][i];
@@ -154,4 +168,43 @@ if(k != max){
     (*vector_b)[k] = (*vector_b)[max];
     (*vector_b)[max] = temp;
 }
+}
+
+void newton(double (&x)[], int n){
+
+double jacob[3][3]={0};
+double f[3]={0};
+double erro_max=10;
+int k, i;
+
+
+for(k=0; fabs(erro_max)>0.0001 && k<200; k++){
+    jacobian(&jacob, x);
+    function(&f, x);
+    gauss(&jacob, &f, n, true, false, 100);
+    x[0]=x[0]-f[0];
+    x[1]=x[1]-f[1];
+    if(f[0]/x[0] > f[1]/x[1])
+        erro_max = f[0]/x[0];
+    else
+        erro_max = f[1]/x[1];
+}
+
+cout << x[0] << "\t" << x[1] << endl;
+}
+
+void jacobian(double (*jacob)[][3], double x[]){
+
+(*jacob)[0][0]=2*x[0];
+(*jacob)[0][1]=2*x[1];
+(*jacob)[1][0]=-2*x[0];
+(*jacob)[1][1]=1;
+
+}
+
+void function(double (*f)[], double x[]){
+
+(*f)[0]=x[0]*x[0]+x[1]*x[1]-5;
+(*f)[1]=x[1]-x[0]*x[0]+1;
+
 }
