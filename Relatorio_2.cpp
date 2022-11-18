@@ -101,7 +101,17 @@ gaussSeidelRelax (a,b,5,1e-4,200,x,2, Erro4);
 
 double vetorX[2]={1,1};
 n=2;
-cout << "\n3. Sistema de Newton" << endl;
+cout << "\n3. Sistema de Newton, Inicial (1,1)" << endl;
+newton(vetorX, n);
+
+vetorX[0]=-2;
+vetorX[1]=1;
+cout << "\n3. Sistema de Newton, Inicial (-2,1)" << endl;
+newton(vetorX, n);
+
+vetorX[0]=-2;
+vetorX[1]=-2;
+cout << "\n3. Sistema de Newton, Inicial (-2,-2)" << endl;
 newton(vetorX, n);
 
 return 0;
