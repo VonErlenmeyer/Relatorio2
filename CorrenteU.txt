@@ -1,7 +1,9 @@
-plot 'I1.dat' title "Corrente I1" with lp linecolor "red" pointtype 7,  'I2.dat' title "Corrente I2" with lp linecolor "blue" pointtype 7, 'I3.dat' title "Corrente I3" with lp linecolor "green" pointtype 7
+I1(x) = 1.875 + x/4
+I2(x) = 0.625 - x/4
+I3(x) = 1.25 + x/2
+plot I1(x) title "Função I1" with line linecolor "dark-red" linewidth 4, I2(x) title "Função I2" with line linecolor "dark-blue" linewidth 4, I3(x) title "Função I3" with line linecolor "dark-green" linewidth 4, 'I1.dat' title "Corrente I1" with lp linecolor "light-red" pointtype 7,  'I2.dat' title "Corrente I2" with lp linecolor "cyan" pointtype 7, 'I3.dat' title "Corrente I3" with lp linecolor "green" pointtype 7
 set xlabel "Tensão em V2" font "Times-New-Roman, 16"
 set ylabel "Corrente Elétrica" offset 0.5,0 font "Times-New-Roman, 16" 
 set title "Corrente em cada resistência em função de V2" font "Times-New-Roman, 17"
-set key top right
+set key top left
 set zeroaxis linetype 3 lc rgb "black"
-replot

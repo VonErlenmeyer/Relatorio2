@@ -63,15 +63,14 @@ if(I1){
    I1.close();
 }
 
-double vector_b3[3]={0,-10,-15};
-for(int i=0; i<=20; i++){
+double vector_b3[3]={0};
+for(int VCount=-10; VCount<=10; VCount++){
     File = true;
-    vector_b3[0]={0};
-    vector_b3[1]=-10+i;
-    vector_b3[2]=-15+i;
+    vector_b3[0]=0;
+    vector_b3[1]=-VCount;
+    vector_b3[2]=-VCount-5;
     double matrix3[3][3]={{1,-1,-1},{0,2,-1},{-2,0,-1}};
     gauss(&matrix3, &vector_b3, n, comPivot, File, VCount);
-    VCount++;
 }
 
 double x[5]={0};
