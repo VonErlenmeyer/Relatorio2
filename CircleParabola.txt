@@ -3,13 +3,14 @@ plot x
 set size ratio 1
 set xrange [-2.5:2.5]
 set yrange [-2.5:2.5]
+set key bottom right font "Sans,14"
 set key offset 0,0
 set multiplot
 set parametric
 r= sqrt(5)
-plot r*sin(t),r*cos(t) title "Circunferência, 1ª Eq." with line linecolor "blue" linewidth 3
+plot r*sin(t),r*cos(t) title "x^{2} + y^{2} = 5" with line linecolor "blue" linewidth 3
 unset parametric
-set key offset 0,1
-plot x**2-1 title "Parábola, 2ª Eq." with line linecolor "red" linewidth 3
+set key offset 0,2
+plot x**2-1 title "y = x^{2} - 1" with line linecolor "red" linewidth 3
 unset multiplot
 unset logscale
